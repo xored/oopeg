@@ -5,7 +5,7 @@ class Build : build::BuildPod {
     podName = "confapi"
     summary = "Confluence integration API"
     version = Version.fromStr("1.0")
-    srcDirs = [`test/`, `fan/`, `fan/render/`, `fan/misc/`, `fan/data/`]
+    srcDirs = [`test/`, `fan/`]
     resDirs = [`res/`]
     depends = [
       "sys 1.0",
