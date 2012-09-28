@@ -8,7 +8,7 @@
 ** examples
   Some simple examples. 
   
-** confapi
-  Library to transform confluence markup to HTML, depends on peg.
+** confparser
+  Library to parse confluence markup and transform it into HTML, depends on peg.
 
 

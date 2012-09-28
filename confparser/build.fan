@@ -2,8 +2,8 @@ using build
 
 class Build : build::BuildPod {
   new make() {
-    podName = "confapi"
-    summary = "Confluence integration API"
+    podName = "confparser"
+    summary = "Confluence markup parser"
     version = Version.fromStr("1.0")
     srcDirs = [`test/`, `fan/`]
     resDirs = [`res/`]
