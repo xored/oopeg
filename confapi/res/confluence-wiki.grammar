@@ -1,0 +1,73 @@
+ConfluenceWiki <- Tokens* EOF
+
+Line <- Tokens (EOL / EOF)
+
+Tokens <- Token+
+Token <- (
+    GraphicalEmoticon /
+    BoldText / ItalicText / StrikeText / UnderText / 
+    CitationText / SuperScriptText / SubScriptText /
+    BulletedList / NumberedList /
+    Link /
+    H1Text / H2Text / H3Text / H4Text / H5Text / H6Text /
+    Table /
+    Spaces / LineBreak / Word / SpecialSign
+)
+
+Word <- Numbers / Characters / Signs
+ 
+LinkAddress <- (!"]" .)+
+Link <- "[" LinkAddress "]"
+
+EndOfList <- &NumberedStartOfList / &BulletedStartOfList / EOL EOL / EOL? EOF
+BulletedList <- (BulletedListLine)+
+NumberedList <- (NumberedListLine)+
+
+NumberedStartOfList <- EOL Spaces? "#"+ Spaces
+NumberedListBody <- (!EndOfList Token)*
+NumberedListLine <- NumberedStartOfList NumberedListBody EndOfList 
+
+BulletedStartOfList <- EOL Spaces? "*"+ Spaces
+BulletedListBody <- (!EndOfList Token)*
+BulletedListLine <- BulletedStartOfList BulletedListBody EndOfList 
+
+BoldText <- "*" (Word / (!"*" SpecialSign+)) (Spaces? (Word / (!"*" SpecialSign+)))* "*"
+ItalicText <- "_" (Word / (!"_" SpecialSign+)) (Spaces? (Word / (!"_" SpecialSign+)))* "_"
+StrikeText <- "-" (Word / (!"-" SpecialSign+)) (Spaces? (Word / (!"-" SpecialSign+)))* "-"
+UnderText <- "+" (Word / (!"+" SpecialSign+)) (Spaces? (Word / (!"+" SpecialSign+)))* "+"
+CitationText <- "??" (Word / (!"??" SpecialSign+)) (Spaces? (Word / (!"??" SpecialSign+)))* "??"
+SuperScriptText <- "^" (Word / (!"^" SpecialSign+)) (Spaces? (Word / (!"^" SpecialSign+)))* "^"
+SubScriptText <- "~" (Word / (!"~" SpecialSign+)) (Spaces? (Word / (!"~" SpecialSign+)))* "~"
+
+HBodyText <- (!NL .)+
+H1Text <- "h1." Spaces? HBodyText* NL
+H2Text <- "h2." Spaces? HBodyText* NL
+H3Text <- "h3." Spaces? HBodyText* NL
+H4Text <- "h4." Spaces? HBodyText* NL
+H5Text <- "h5." Spaces? HBodyText* NL
+H6Text <- "h6." Spaces? HBodyText* NL
+
+TableCellBody <- (!TableTh !TableTd !TableTrEnding !EOF !(EOL EOL) Token)+
+TableTd <- "|" TableCellBody
+TableTh <- "|" "|"+ TableCellBody
+TableTrEnding <- ("|"+ Space* NL)
+TableTr <- (!TableTrEnding (TableTh / TableTd))+ TableTrEnding
+Table <- TableTr+
+
+GraphicalEmoticon <- (
+	( "(" ("on" / "off" / ("*" [rgby]) / [+-?*yni/x!]) ")" ) / (":" [()PD]) / ";)"
+)
+
+EOF <- !.
+EOL <- '\r\n' / '\n' / '\r'
+NL <- EOL / EOF
+LineBreak <- EOL / "\\\\"
+
+SpecialSign <- [-*_+\[\]{}?~^|]
+Signs <- [!@#$%&():\"=<>№;/,.'\\`]+
+
+Space <- [ \t]
+Spaces <- [ \t]+
+
+Numbers <- [0-9]+ 
+Characters <- [a-zA-Zа-яА-ЯёЁ]+

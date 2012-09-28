@@ -1,2 +1,14 @@
-* oopeg
-  Pure Fantom PEG parser which can parse object streams (besides character streams).
+* Overview
+  Pure Fantom PEG parser with related sub-projects.
+  
+* Sub-projects
+** peg
+  PEG parser library.
+  
+** examples
+  Some simple examples. 
+  
+** confapi
+  Library to transform confluence markup to HTML, depends on peg.
+
+

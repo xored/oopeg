@@ -1,2 +1,6 @@
 *~
 bin/
+.buildpath
+.classpath
+.project
+
