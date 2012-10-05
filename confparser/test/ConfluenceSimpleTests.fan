@@ -1,6 +1,4 @@
 
-using util
-
 internal class ConfluenceSimpleTests : Test {
 
   Void testPlainText() {

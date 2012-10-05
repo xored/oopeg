@@ -17,7 +17,7 @@ const class ConfluenceWikiHtmlRender {
     grammarText := ConfluenceUtils.readResourceFile(`/res/confluence-wiki.grammar`)
     return Grammar.fromStr(grammarText)
   }.call
-
+  
   private StrBuf traverse(
     ConfluenceRenderContext context, BlockNode node,
     |Block -> Str| onBefore, |Block -> Str| onAfter

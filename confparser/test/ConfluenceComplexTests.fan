@@ -1,6 +1,4 @@
 
-using util
-
 internal class ConfluenceComplexTests : Test {
   
   public Void testComplex() {
