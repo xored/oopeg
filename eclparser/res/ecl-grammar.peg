@@ -1,0 +1,28 @@
+Script 			<- Sentence+ EOF
+Sentence 		<- Command (PIPE Command)* NL?
+Command 		<- CommandName (S Args)? S?
+CommandName 	<- Id
+Args 			<- NamedArgs / PositionalArgs
+NamedArgs 		<- NamedArg (S NamedArg)*
+
+PositionalArgs	<- ArgValue (S ArgValue)*
+NamedArg 		<- ArgName (S ArgValue)?
+ArgName 		<- '-' Id
+ArgValue 		<- SimpleValue / QuotedValue / ResultValue / ScriptValue
+ResultValue		<- SQ_BR_OPEN Sentence SQ_BR_CLOSE
+ScriptValue		<- CR_BR_OPEN Sentence CR_BR_CLOSE    
+
+PIPE 			<- '|' S?
+SQ_BR_OPEN		<- '[' S?
+SQ_BR_CLOSE		<- ']' S?
+CR_BR_OPEN		<- '{' S?
+CR_BR_CLOSE		<- '}' S?
+
+Id 				<- [a-z] [A-Za-z-]*
+SimpleValue		<- [a-zA-Z0-9]+
+QuotedValue		<- ["] (!NL !["] .)* ["]
+Space 			<- [ \t]
+S 				<- Space+
+EOF 			<- !.
+EOL 			<- '\r\n' / '\n' / '\r'
+NL 				<- EOL / EOF
