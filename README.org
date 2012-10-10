@@ -10,5 +10,8 @@
   
 ** confparser
   Library to parse confluence markup and transform it into HTML, depends on peg.
+  
+** eclparser
+  Library to parse ECL (https://github.com/xored/ecl), depends on peg.
 
 
