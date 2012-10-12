@@ -2,7 +2,7 @@ using peg
 
 class GrammarTest : Test
 {
-  private static const Grammar grammar := Grammar.fromStr(GrammarTest#.pod.file(`/res/ecl-grammar.peg`).readAllStr)
+  private static const Grammar grammar := Grammar.fromStr(GrammarTest#.pod.file(`/res/ecl-modified.peg`).readAllStr)
   
   Void testSingleCommand() {
     text := "get-log"
@@ -57,13 +57,13 @@ class GrammarTest : Test
     name := ""
     foundArgs := Str[,]
     blocks.each {
-      if (it.name.equals("ArgName")) {
+      if (it.name.equals("ParameterName")) {
         if (!name.isEmpty) {
           verifyArg(args, name, "", foundArgs)          
         }
         name = text[it.range]
       }
-      if (it.name.equals("ArgValue")) {
+      if (it.name.equals("ParameterValue")) {
         verifyArg(args, name, text[it.range], foundArgs)
         name = ""
       }
@@ -94,7 +94,7 @@ class GrammarTest : Test
     blocks := Parser.list(grammar, text.toBuf)
     expected := args.dup
     blocks.each {
-      if (it.name.equals("ArgValue")) {
+      if (it.name.equals("ParameterValue")) {
         verifyEq(expected.first, text[it.range])
         expected.removeAt(0)
       }
@@ -103,7 +103,7 @@ class GrammarTest : Test
   }
   
   Void testBrackets() {
-    verifyPositionalArgs("get-menu [get-by-os] | click", ["[get-by-os] "])
+    verifyPositionalArgs("get-menu [get-by-os] | click", ["[get-by-os]"])
     verifyPositionalArgs("try { get-button | click }", ["{ get-button | click }"])
   }
   

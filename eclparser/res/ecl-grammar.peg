@@ -1,28 +1,33 @@
-Script 			<- Sentence+ EOF
-Sentence 		<- Command (PIPE Command)* NL?
-Command 		<- CommandName (S Args)? S?
-CommandName 	<- Id
-Args 			<- NamedArgs / PositionalArgs
-NamedArgs 		<- NamedArg (S NamedArg)*
+Script <- Spacing Executable CommandSpacing (ExecutableEnding Spacing Executable CommandSpacing)* ExecutableEnding?  Spacing
 
-PositionalArgs	<- ArgValue (S ArgValue)*
-NamedArg 		<- ArgName (S ArgValue)?
-ArgName 		<- '-' Id
-ArgValue 		<- SimpleValue / QuotedValue / ResultValue / ScriptValue
-ResultValue		<- SQ_BR_OPEN Sentence SQ_BR_CLOSE
-ScriptValue		<- CR_BR_OPEN Sentence CR_BR_CLOSE    
+Executable <- (Pipeline / Command)
 
-PIPE 			<- '|' S?
-SQ_BR_OPEN		<- '[' S?
-SQ_BR_CLOSE		<- ']' S?
-CR_BR_OPEN		<- '{' S?
-CR_BR_CLOSE		<- '}' S?
+Pipeline <- Command (Spacing '|' Spacing Command)+
 
-Id 				<- [a-z] [A-Za-z-]*
-SimpleValue		<- [a-zA-Z0-9]+
-QuotedValue		<- ["] (!NL !["] .)* ["]
-Space 			<- [ \t]
-S 				<- Space+
-EOF 			<- !.
-EOL 			<- '\r\n' / '\n' / '\r'
-NL 				<- EOL / EOF
+Command <- CommandName ([ \t]+ Parameter)*
+CommandName <- Identifier
+
+Parameter <- ParameterName ([ \t]+ ParameterValue)? / ParameterValue
+ParameterName <- "-" "-"? Identifier
+ParameterValue <- Identifier / Number / String / CurlyExpression / Substitution
+
+Substitution <- '[' Spacing Executable Spacing ']'
+
+CurlyExpression <- '{' Spacing Script Spacing '}'
+
+Identifier <- [a-zA-Z_][a-zA-Z_0-9-]*
+Number <- [0-9]+
+
+StringPart <- "\"" ("\\\"" / !"\"" !EndOfLine .)* "\""
+String <- StringPart (Spacing? '+' Spacing? StringPart)*
+
+SlComment <- "//" (!EndOfLine)* EndOfLine
+MlComment <- "/*" (!"*/")* "*/"
+
+Spacing <- ([ \t\n\r]+ / SlComment / MlComment)*
+CommandSpacing <- ([ \t] / SlComment / MlComment)*
+ExecutableEnding <- (EndOfLine+ / ';')
+EndOfLine <- '\r\n' / '\r' / '\n'
+
+
+
